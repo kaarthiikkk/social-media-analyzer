@@ -2,7 +2,7 @@
 
 Social Media Content Analyzer is a lightweight, production‑ready web app that turns PDFs and images into social‑ready text and practical insights. Upload one or many files with drag‑and‑drop, and the app extracts text using pdfplumber/pdfminer for digital PDFs and Tesseract OCR for scans through pdf2image. It preserves useful formatting, cleans stray breaks, and merges content so you can work from a single, readable draft. A fast local analysis summarizes word and character counts, hashtags, mentions, links, top keywords, and overall sentiment via VADER. For creative acceleration, optional Gemini integration proposes a concise caption, relevant hashtags, and ten clear engagement ideas you can copy in one click. The interface is simple, responsive, and accessible, built with Flask and Bootstrap, featuring copy buttons, JSON export, and a dark mode toggle. Environment variables control secrets and preferences; Poppler and Tesseract are the only system dependencies. Run locally with Python, or use the included Dockerfile for consistent builds and easy cloud deployment. On Render, the service binds to the provided PORT automatically. This project suits marketers, founders, and teams who want to convert research, case studies, screenshots, or scanned documents into polished social posts quickly and confidently.
 
-Live demo: https://social-media-analyzer-e0fe.onrender.com
+Live demo: https://social-media-analyzer-fn9s.onrender.com
 
 ## Features
 - Upload multiple PDFs and images (drag & drop)
