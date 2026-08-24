@@ -8,3 +8,4 @@ python-dotenv==1.0.1
 pdf2image
 pdfplumber
 google-generativeai
+google-genai
