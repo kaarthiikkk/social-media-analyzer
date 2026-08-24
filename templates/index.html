@@ -1,0 +1,1779 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="app-shell">
+
+  <!-- =====================================================
+       HERO
+  ====================================================== -->
+  <section class="hero-section">
+
+    <div class="hero-copy">
+
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        AI CONTENT INTELLIGENCE
+      </div>
+
+      <h1>
+        Turn raw content into
+        <span class="gradient-text">better posts.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Upload a PDF, screenshot, or scanned document.
+        Extract the content, understand what works,
+        and get actionable improvements tailored to your audience.
+      </p>
+
+      <div class="hero-pills">
+
+        <span>
+          <i class="bi bi-file-earmark-pdf"></i>
+          PDF extraction
+        </span>
+
+        <span>
+          <i class="bi bi-eye"></i>
+          OCR powered
+        </span>
+
+        <span>
+          <i class="bi bi-stars"></i>
+          AI insights
+        </span>
+
+      </div>
+
+    </div>
+
+    <div class="hero-stat-card">
+      <span class="stat-label">CONTENT ENGINE</span>
+      <strong>01</strong>
+      <span class="stat-caption">
+        Upload → Analyze → Improve
+      </span>
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       UPLOAD
+  ====================================================== -->
+  <section class="upload-card">
+
+    <div class="section-heading">
+
+      <div>
+
+        <div class="section-kicker">
+          STEP 01
+        </div>
+
+        <h2>
+          Bring your content
+        </h2>
+
+        <p>
+          Upload one or multiple files to begin the analysis.
+        </p>
+
+      </div>
+
+      <div class="supported-types">
+        <span>PDF</span>
+        <span>PNG</span>
+        <span>JPG</span>
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         FORM
+    ================================================== -->
+
+    <form
+      id="uploadForm"
+      action="/"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+
+      <!-- Platform + goal -->
+
+      <div class="configuration-grid">
+
+        <div class="config-group">
+
+          <label for="platform">
+
+            <span>
+              Target platform
+            </span>
+
+            <small>
+              Where will this content be published?
+            </small>
+
+          </label>
+
+          <select
+            id="platform"
+            name="platform"
+            class="form-select premium-select"
+          >
+
+            <option
+              value="LinkedIn"
+              {% if platform == "LinkedIn" %}selected{% endif %}
+            >
+              LinkedIn
+            </option>
+
+            <option
+              value="Instagram"
+              {% if platform == "Instagram" %}selected{% endif %}
+            >
+              Instagram
+            </option>
+
+            <option
+              value="X"
+              {% if platform == "X" %}selected{% endif %}
+            >
+              X
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="config-group">
+
+          <label for="goal">
+
+            <span>
+              Primary objective
+            </span>
+
+            <small>
+              What should the post achieve?
+            </small>
+
+          </label>
+
+          <select
+            id="goal"
+            name="goal"
+            class="form-select premium-select"
+          >
+
+            <option
+              value="Engagement"
+              {% if goal == "Engagement" %}selected{% endif %}
+            >
+              Engagement
+            </option>
+
+            <option
+              value="Shares"
+              {% if goal == "Shares" %}selected{% endif %}
+            >
+              Shares
+            </option>
+
+            <option
+              value="Conversions"
+              {% if goal == "Conversions" %}selected{% endif %}
+            >
+              Conversions
+            </option>
+
+            <option
+              value="Awareness"
+              {% if goal == "Awareness" %}selected{% endif %}
+            >
+              Awareness
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           DROP AREA
+      ================================================== -->
+
+      <div
+        id="dropArea"
+        class="drop-area"
+        tabindex="0"
+        role="button"
+        aria-label="File upload area"
+      >
+
+        <div class="upload-icon">
+          <i class="bi bi-cloud-arrow-up"></i>
+        </div>
+
+        <h3>
+          Drop your content here
+        </h3>
+
+        <p>
+          Drag and drop files or
+          <span class="browse-link">
+            browse from your device
+          </span>
+        </p>
+
+        <div class="upload-meta">
+
+          <span>
+            <i class="bi bi-file-earmark-pdf"></i>
+            PDF
+          </span>
+
+          <span>
+            <i class="bi bi-image"></i>
+            Images
+          </span>
+
+          <span>
+            <i class="bi bi-magic"></i>
+            OCR supported
+          </span>
+
+        </div>
+
+        <input
+          id="fileInput"
+          class="visually-hidden"
+          type="file"
+          name="files"
+          accept=".pdf,.png,.jpg,.jpeg"
+          multiple
+        />
+
+      </div>
+
+
+      <!-- =================================================
+           FILE LIST
+      ================================================== -->
+
+      <div
+        id="fileList"
+        class="file-list"
+      ></div>
+
+
+      <!-- =================================================
+           ACTIONS
+      ================================================== -->
+
+      <div class="upload-actions">
+
+        <button
+          id="submitBtn"
+          type="submit"
+          class="btn btn-primary analyze-btn"
+        >
+          <span>
+            Analyze content
+          </span>
+
+          <i class="bi bi-arrow-right"></i>
+        </button>
+
+        <button
+          id="clearFiles"
+          type="button"
+          class="btn btn-outline-secondary clear-btn"
+        >
+          Clear
+        </button>
+
+      </div>
+
+
+      <!-- =================================================
+           LOADING
+      ================================================== -->
+
+      <div
+        id="loading"
+        class="loading-panel d-none"
+        aria-live="polite"
+      >
+
+        <div class="loading-spinner"></div>
+
+        <div>
+
+          <strong>
+            Analyzing your content
+          </strong>
+
+          <span>
+            Extracting text, evaluating content signals,
+            and generating recommendations...
+          </span>
+
+        </div>
+
+      </div>
+
+    </form>
+
+
+    <!-- =================================================
+         ERRORS
+    ================================================== -->
+
+    {% if errors %}
+
+    <div class="error-panel">
+
+      <div class="error-icon">
+        <i class="bi bi-exclamation-triangle"></i>
+      </div>
+
+      <div>
+
+        <strong>
+          Some files could not be processed
+        </strong>
+
+        <ul>
+
+          {% for e in errors %}
+
+          <li>
+            {{ e }}
+          </li>
+
+          {% endfor %}
+
+        </ul>
+
+      </div>
+
+    </div>
+
+    {% endif %}
+
+  </section>
+
+
+  <!-- =====================================================
+       RESULTS
+  ====================================================== -->
+
+  {% if results %}
+
+  <!-- =====================================================
+       PROCESSING SUMMARY
+  ====================================================== -->
+
+  <section class="processing-strip">
+
+    <div class="processing-item">
+
+      <div class="processing-icon success">
+        <i class="bi bi-check2"></i>
+      </div>
+
+      <div>
+
+        <span>
+          FILES PROCESSED
+        </span>
+
+        <strong>
+          {{ results|length }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="processing-divider"></div>
+
+
+    <div class="processing-item">
+
+      <div class="processing-icon blue">
+        <i class="bi bi-file-text"></i>
+      </div>
+
+      <div>
+
+        <span>
+          TEXT EXTRACTION
+        </span>
+
+        <strong>
+          Complete
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="processing-divider"></div>
+
+
+    <div class="processing-item">
+
+      <div class="processing-icon purple">
+        <i class="bi bi-stars"></i>
+      </div>
+
+      <div>
+
+        <span>
+          AI ANALYSIS
+        </span>
+
+        <strong>
+
+          {% if analysis.ai_available %}
+            Ready
+          {% else %}
+            Local fallback
+          {% endif %}
+
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="processing-divider"></div>
+
+
+    <div class="processing-item">
+
+      <div class="processing-icon orange">
+        <i class="bi bi-bullseye"></i>
+      </div>
+
+      <div>
+
+        <span>
+          OPTIMIZED FOR
+        </span>
+
+        <strong>
+          {{ platform }}
+        </strong>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       ANALYSIS HEADER
+  ====================================================== -->
+
+  <section class="analysis-header">
+
+    <div>
+
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        ANALYSIS COMPLETE
+      </div>
+
+      <h2>
+        Your content, decoded.
+      </h2>
+
+      <p>
+        A combined view of content quality, audience signals,
+        AI recommendations, and platform-specific improvements.
+      </p>
+
+    </div>
+
+
+    <div class="analysis-actions">
+
+      <button
+        id="exportAnalysis"
+        type="button"
+        class="action-btn"
+      >
+        <i class="bi bi-download"></i>
+        Export
+      </button>
+
+      <button
+        id="clearAll"
+        type="button"
+        class="action-btn danger"
+      >
+        <i class="bi bi-plus-lg"></i>
+        New analysis
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       HEALTH SCORE
+  ====================================================== -->
+
+  <section class="health-section">
+
+    <div class="health-score-card">
+
+      <div class="health-score-ring">
+
+        <div class="health-score-inner">
+
+          <strong>
+            {{ analysis.scores.overall }}
+          </strong>
+
+          <span>
+            /100
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="health-score-copy">
+
+        <div class="section-kicker">
+          CONTENT HEALTH
+        </div>
+
+        <h3>
+
+          {% if analysis.scores.overall >= 80 %}
+
+            Strong content foundation
+
+          {% elif analysis.scores.overall >= 60 %}
+
+            Good foundation — room to improve
+
+          {% else %}
+
+            Needs optimization
+
+          {% endif %}
+
+        </h3>
+
+        <p>
+          Your overall score combines readability,
+          clarity, hook strength, call-to-action quality,
+          emotional impact, and shareability.
+        </p>
+
+        <div class="health-meta">
+
+          <span>
+            <i class="bi bi-stars"></i>
+            AI analyzed
+          </span>
+
+          <span>
+            <i class="bi bi-bullseye"></i>
+            {{ platform }}
+          </span>
+
+          <span>
+            <i class="bi bi-flag"></i>
+            {{ goal }}
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Score cards -->
+
+    <div class="score-grid">
+
+      {% set score_items = [
+        ("hook", "Hook strength", "bi-lightning-charge"),
+        ("clarity", "Clarity", "bi-eye"),
+        ("readability", "Readability", "bi-book"),
+        ("cta", "CTA effectiveness", "bi-cursor"),
+        ("shareability", "Shareability", "bi-share"),
+        ("emotional_impact", "Emotional impact", "bi-heart")
+      ] %}
+
+
+      {% for key, label, icon in score_items %}
+
+      <div class="score-card">
+
+        <div class="score-card-top">
+
+          <div class="score-icon">
+            <i class="bi {{ icon }}"></i>
+          </div>
+
+          <strong>
+            {{ analysis.scores[key] }}
+          </strong>
+
+        </div>
+
+        <span class="score-label">
+          {{ label }}
+        </span>
+
+        <div class="score-track">
+
+          <div
+            class="score-fill"
+            style="width: {{ analysis.scores[key] }}%;"
+          ></div>
+
+        </div>
+
+        <p>
+          {{ analysis.score_explanations[key] }}
+        </p>
+
+      </div>
+
+      {% endfor %}
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       TOP ISSUE
+  ====================================================== -->
+
+  <section class="priority-section">
+
+    <div class="priority-card">
+
+      <div class="priority-card-icon">
+        <i class="bi bi-exclamation-lg"></i>
+      </div>
+
+      <div class="priority-card-content">
+
+        <div class="section-kicker">
+          FIX THIS FIRST
+        </div>
+
+        <h3>
+          {{ analysis.top_issue.title }}
+        </h3>
+
+        <p>
+          {{ analysis.top_issue.reason }}
+        </p>
+
+        <div class="priority-fix">
+
+          <span>
+            RECOMMENDED FIX
+          </span>
+
+          <strong>
+            {{ analysis.top_issue.fix }}
+          </strong>
+
+        </div>
+
+      </div>
+
+      <div class="priority-impact">
+        HIGH<br>
+        IMPACT
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       CONTENT DNA
+  ====================================================== -->
+
+  <section class="two-column-grid">
+
+    <div class="content-card">
+
+      <div class="content-card-header">
+
+        <div>
+
+          <div class="section-kicker">
+            CONTENT DNA
+          </div>
+
+          <h3>
+            What kind of content is this?
+          </h3>
+
+          <p>
+            AI-estimated characteristics of your content.
+          </p>
+
+        </div>
+
+        <div class="mini-icon">
+          <i class="bi bi-fingerprint"></i>
+        </div>
+
+      </div>
+
+
+      <div class="dna-list">
+
+        {% set dna_items = [
+          ("educational", "Educational"),
+          ("promotional", "Promotional"),
+          ("storytelling", "Storytelling"),
+          ("emotional", "Emotional"),
+          ("authority", "Authority"),
+          ("urgency", "Urgency")
+        ] %}
+
+
+        {% for key, label in dna_items %}
+
+        <div class="dna-item">
+
+          <div class="dna-label">
+
+            <span>
+              {{ label }}
+            </span>
+
+            <strong>
+              {{ analysis.content_dna[key] }}%
+            </strong>
+
+          </div>
+
+          <div class="dna-track">
+
+            <div
+              class="dna-fill"
+              style="width: {{ analysis.content_dna[key] }}%;"
+            ></div>
+
+          </div>
+
+        </div>
+
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+
+    <!-- Tone -->
+
+    <div class="content-card tone-card-large">
+
+      <div class="content-card-header">
+
+        <div>
+
+          <div class="section-kicker">
+            AUDIENCE SIGNAL
+          </div>
+
+          <h3>
+            Content tone
+          </h3>
+
+        </div>
+
+        <div class="tone-orb">
+          <i class="bi bi-activity"></i>
+        </div>
+
+      </div>
+
+
+      <div class="tone-result">
+
+        <strong>
+          {{ analysis.summary.tone }}
+        </strong>
+
+        {% if analysis.summary.gemini_confidence %}
+
+        <span>
+          AI confidence:
+          {{ "%.0f"|format(
+              analysis.summary.gemini_confidence|float * 100
+          ) }}%
+        </span>
+
+        {% endif %}
+
+      </div>
+
+
+      <div class="sentiment-breakdown">
+
+        <div>
+
+          <span>
+            Positive
+          </span>
+
+          <strong>
+            {{ analysis.summary.sentiment_scores.pos }}
+          </strong>
+
+        </div>
+
+        <div>
+
+          <span>
+            Neutral
+          </span>
+
+          <strong>
+            {{ analysis.summary.sentiment_scores.neu }}
+          </strong>
+
+        </div>
+
+        <div>
+
+          <span>
+            Negative
+          </span>
+
+          <strong>
+            {{ analysis.summary.sentiment_scores.neg }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       ORIGINAL VS IMPROVED
+  ====================================================== -->
+
+  <section class="content-card rewrite-card">
+
+    <div class="content-card-header">
+
+      <div>
+
+        <div class="section-kicker">
+          AI REWRITE
+        </div>
+
+        <h3>
+          From original to stronger
+        </h3>
+
+        <p>
+          An optimized version built around your selected
+          platform and objective.
+        </p>
+
+      </div>
+
+      <div class="ai-badge">
+        <i class="bi bi-stars"></i>
+        AI optimized
+      </div>
+
+    </div>
+
+
+    <div class="comparison-grid">
+
+      <!-- Original -->
+
+      <div class="comparison-panel original-panel">
+
+        <div class="comparison-label">
+
+          <span class="comparison-dot neutral"></span>
+
+          ORIGINAL
+
+        </div>
+
+        <div class="comparison-content">
+          {{ combined_text }}
+        </div>
+
+      </div>
+
+
+      <!-- Arrow -->
+
+      <div class="comparison-arrow">
+        <i class="bi bi-arrow-right"></i>
+      </div>
+
+
+      <!-- Improved -->
+
+      <div class="comparison-panel improved-panel">
+
+        <div class="comparison-label">
+
+          <span class="comparison-dot success"></span>
+
+          IMPROVED
+
+        </div>
+
+        <div
+          id="improvedVersion"
+          class="comparison-content"
+        >
+          {{ analysis.ai_generated.improved_version }}
+        </div>
+
+        <button
+          type="button"
+          class="copy-btn premium-copy"
+          data-copy-target="improvedVersion"
+        >
+          <i class="bi bi-copy"></i>
+          Copy improved version
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="rewrite-reason">
+
+      <i class="bi bi-lightbulb"></i>
+
+      <div>
+
+        <strong>
+          Why this version is stronger
+        </strong>
+
+        <p>
+          {{ analysis.ai_generated.rewrite_reason }}
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       PLATFORM ADVICE
+  ====================================================== -->
+
+  <section class="content-card">
+
+    <div class="content-card-header">
+
+      <div>
+
+        <div class="section-kicker">
+          PLATFORM OPTIMIZATION
+        </div>
+
+        <h3>
+          Optimized for {{ platform }}
+        </h3>
+
+        <p>
+          Recommendations tailored to your selected objective:
+          <strong>{{ goal }}</strong>.
+        </p>
+
+      </div>
+
+      <div class="platform-badge">
+        <i class="bi bi-bullseye"></i>
+        {{ platform }}
+      </div>
+
+    </div>
+
+
+    <div class="platform-advice-grid">
+
+      {% for advice in analysis.platform_advice %}
+
+      <div class="platform-advice-item">
+
+        <span>
+          {{ loop.index }}
+        </span>
+
+        <p>
+          {{ advice }}
+        </p>
+
+      </div>
+
+      {% else %}
+
+      <div class="empty-inline">
+        Platform-specific advice was not returned.
+      </div>
+
+      {% endfor %}
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       ENGAGEMENT RECOMMENDATIONS
+  ====================================================== -->
+
+  <section class="content-card">
+
+    <div class="content-card-header">
+
+      <div>
+
+        <div class="section-kicker">
+          ENGAGEMENT ENGINE
+        </div>
+
+        <h3>
+          What should you improve?
+        </h3>
+
+        <p>
+          Prioritized recommendations based on your content.
+        </p>
+
+      </div>
+
+      <button
+        id="copyEngagement"
+        type="button"
+        class="action-btn"
+      >
+        <i class="bi bi-copy"></i>
+        Copy all
+      </button>
+
+    </div>
+
+
+    <div
+      id="engagementList"
+      class="premium-list"
+    >
+
+      {% for item in analysis.engagement %}
+
+      <div class="engagement-item">
+
+        <div class="priority-number">
+          {{ loop.index }}
+        </div>
+
+        <div class="engagement-content">
+
+          <div class="recommendation-heading">
+
+            <strong>
+              {{ item.title }}
+            </strong>
+
+            <span
+              class="priority-tag {{ item.priority }}"
+            >
+              {{ item.priority|upper }}
+            </span>
+
+          </div>
+
+          <p>
+            {{ item.reason }}
+          </p>
+
+          <div class="recommendation-action">
+
+            <i class="bi bi-arrow-right"></i>
+
+            <span>
+              {{ item.action }}
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      {% else %}
+
+      <div class="empty-inline">
+        No AI recommendations were returned.
+      </div>
+
+      {% endfor %}
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       HASHTAGS + READABILITY
+  ====================================================== -->
+
+  <section class="two-column-grid">
+
+    <div class="content-card">
+
+      <div class="content-card-header">
+
+        <div>
+
+          <div class="section-kicker">
+            DISCOVERY
+          </div>
+
+          <h3>
+            Recommended hashtags
+          </h3>
+
+        </div>
+
+        <button
+          id="copyHashtags"
+          type="button"
+          class="action-btn"
+          data-tags="{{ analysis.ai_generated.recommended_hashtags | join(' ') }}"
+        >
+          <i class="bi bi-copy"></i>
+          Copy
+        </button>
+
+      </div>
+
+
+      <div class="hashtag-cloud">
+
+        {% for tag in analysis.ai_generated.recommended_hashtags %}
+
+        <span class="hashtag">
+          {{ tag }}
+        </span>
+
+        {% else %}
+
+        <span class="text-muted">
+          No hashtags generated.
+        </span>
+
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+
+    <div class="content-card">
+
+      <div class="content-card-header">
+
+        <div>
+
+          <div class="section-kicker">
+            LANGUAGE SIGNAL
+          </div>
+
+          <h3>
+            Readability
+          </h3>
+
+        </div>
+
+        <div class="mini-icon">
+          <i class="bi bi-bar-chart-line"></i>
+        </div>
+
+      </div>
+
+
+      <div class="readability-value">
+        {{ analysis.summary.avg_word_length }}
+      </div>
+
+      <p class="readability-description">
+        Average characters per word.
+        Lower values generally indicate simpler language.
+      </p>
+
+
+      <div class="readability-row">
+
+        <span>
+          Words
+        </span>
+
+        <strong>
+          {{ analysis.summary.word_count }}
+        </strong>
+
+      </div>
+
+
+      <div class="readability-row">
+
+        <span>
+          Characters
+        </span>
+
+        <strong>
+          {{ analysis.summary.chars }}
+        </strong>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       EXTRACTION REPORT
+  ====================================================== -->
+
+  <section class="content-card extraction-card">
+
+    <div class="content-card-header">
+
+      <div>
+
+        <div class="section-kicker">
+          EXTRACTION LAYER
+        </div>
+
+        <h3>
+          What the AI actually read
+        </h3>
+
+        <p>
+          Transparent view of the content extracted from your files.
+        </p>
+
+      </div>
+
+      <div class="extraction-status">
+
+        <i class="bi bi-check-circle-fill"></i>
+
+        Extraction complete
+
+      </div>
+
+    </div>
+
+
+    <div class="extraction-stats">
+
+      <div>
+
+        <span>
+          FILES
+        </span>
+
+        <strong>
+          {{ results|length }}
+        </strong>
+
+      </div>
+
+      <div>
+
+        <span>
+          WORDS
+        </span>
+
+        <strong>
+          {{ analysis.summary.word_count }}
+        </strong>
+
+      </div>
+
+      <div>
+
+        <span>
+          CHARACTERS
+        </span>
+
+        <strong>
+          {{ analysis.summary.chars }}
+        </strong>
+
+      </div>
+
+      <div>
+
+        <span>
+          OCR / PDF
+        </span>
+
+        <strong>
+          Automatic
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="extraction-actions">
+
+      <button
+        id="toggleCombined"
+        type="button"
+        class="action-btn"
+      >
+        Show more
+      </button>
+
+      <button
+        type="button"
+        class="action-btn copy-btn"
+        data-copy-target="combinedText"
+      >
+        <i class="bi bi-copy"></i>
+        Copy text
+      </button>
+
+    </div>
+
+
+    <div
+      id="combinedText"
+      class="extracted-text"
+    >
+      {{ combined_text }}
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       CONTENT SIGNALS
+  ====================================================== -->
+
+  <section class="content-card">
+
+    <div class="content-card-header">
+
+      <div>
+
+        <div class="section-kicker">
+          DEEP ANALYSIS
+        </div>
+
+        <h3>
+          Content signals
+        </h3>
+
+      </div>
+
+    </div>
+
+
+    <div class="detail-grid">
+
+      <div class="detail-item">
+
+        <span>
+          Word count
+        </span>
+
+        <strong>
+          {{ analysis.summary.word_count }}
+        </strong>
+
+      </div>
+
+
+      <div class="detail-item">
+
+        <span>
+          Character count
+        </span>
+
+        <strong>
+          {{ analysis.summary.chars }}
+        </strong>
+
+      </div>
+
+
+      <div class="detail-item">
+
+        <span>
+          Average word length
+        </span>
+
+        <strong>
+          {{ analysis.summary.avg_word_length }}
+        </strong>
+
+      </div>
+
+
+      <div class="detail-item">
+
+        <span>
+          Hashtags
+        </span>
+
+        <strong>
+          {{ analysis.summary.hashtag_count }}
+        </strong>
+
+      </div>
+
+
+      <div class="detail-item">
+
+        <span>
+          Mentions
+        </span>
+
+        <strong>
+          {{ analysis.summary.mention_count }}
+        </strong>
+
+      </div>
+
+
+      <div class="detail-item">
+
+        <span>
+          URLs
+        </span>
+
+        <strong>
+          {{ analysis.summary.url_count }}
+        </strong>
+
+      </div>
+
+
+      <div class="detail-item">
+
+        <span>
+          Positive sentiment
+        </span>
+
+        <strong>
+          {{ analysis.summary.sentiment_scores.pos }}
+        </strong>
+
+      </div>
+
+
+      <div class="detail-item">
+
+        <span>
+          Negative sentiment
+        </span>
+
+        <strong>
+          {{ analysis.summary.sentiment_scores.neg }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    {% if analysis.summary.top_keywords %}
+
+    <div class="keyword-section">
+
+      <div class="section-kicker">
+        TOP KEYWORDS
+      </div>
+
+      <div class="keyword-cloud">
+
+        {% for pair in analysis.summary.top_keywords %}
+
+        <span class="keyword">
+
+          {{ pair[0] }}
+
+          <small>
+            ×{{ pair[1] }}
+          </small>
+
+        </span>
+
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+    {% endif %}
+
+  </section>
+
+
+  <!-- =====================================================
+       PER FILE
+  ====================================================== -->
+
+  <section class="content-card">
+
+    <div class="content-card-header">
+
+      <div>
+
+        <div class="section-kicker">
+          DOCUMENT BREAKDOWN
+        </div>
+
+        <h3>
+          Per-file extraction
+        </h3>
+
+      </div>
+
+    </div>
+
+
+    <div class="per-file-grid">
+
+      {% for r in results %}
+
+      <article class="per-file-card">
+
+        <div class="per-file-header">
+
+          <div class="file-type-icon small">
+
+            {% if r.filename.lower().endswith('.pdf') %}
+
+              <i class="bi bi-file-earmark-pdf"></i>
+
+            {% else %}
+
+              <i class="bi bi-file-earmark-image"></i>
+
+            {% endif %}
+
+          </div>
+
+
+          <div>
+
+            <strong>
+              {{ r.filename }}
+            </strong>
+
+            <span>
+              {{ r.words }} words ·
+              {{ r.characters }} characters
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="per-file-text">
+          {{ r.text }}
+        </div>
+
+      </article>
+
+      {% endfor %}
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       JAVASCRIPT DATA
+  ====================================================== -->
+
+  <script
+    id="analysisData"
+    type="application/json"
+  >
+    {{
+      {
+        "analysis": analysis,
+        "combined_text": combined_text,
+        "results": results,
+        "platform": platform,
+        "goal": goal
+      } | tojson
+    }}
+  </script>
+
+
+  {% else %}
+
+  <!-- =====================================================
+       EMPTY WORKSPACE
+  ====================================================== -->
+
+  <section class="empty-preview">
+
+    <div class="empty-icon">
+      <i class="bi bi-bar-chart-line"></i>
+    </div>
+
+    <div>
+
+      <div class="section-kicker">
+        YOUR WORKSPACE
+      </div>
+
+      <h3>
+        Your analysis will appear here
+      </h3>
+
+      <p>
+        Upload your content above and we'll extract the text,
+        analyze its signals, and generate practical improvements.
+      </p>
+
+    </div>
+
+
+    <div class="workflow">
+
+      <div class="workflow-step">
+
+        <span>
+          01
+        </span>
+
+        <strong>
+          Upload
+        </strong>
+
+        <small>
+          PDF or image
+        </small>
+
+      </div>
+
+
+      <div class="workflow-line"></div>
+
+
+      <div class="workflow-step">
+
+        <span>
+          02
+        </span>
+
+        <strong>
+          Extract
+        </strong>
+
+        <small>
+          PDF + OCR
+        </small>
+
+      </div>
+
+
+      <div class="workflow-line"></div>
+
+
+      <div class="workflow-step">
+
+        <span>
+          03
+        </span>
+
+        <strong>
+          Analyze
+        </strong>
+
+        <small>
+          AI insights
+        </small>
+
+      </div>
+
+
+      <div class="workflow-line"></div>
+
+
+      <div class="workflow-step">
+
+        <span>
+          04
+        </span>
+
+        <strong>
+          Improve
+        </strong>
+
+        <small>
+          Better content
+        </small>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  {% endif %}
+
+</div>
+
+{% endblock %}

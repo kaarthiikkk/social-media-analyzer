@@ -1,0 +1,10 @@
+Flask==3.0.3
+pdfminer.six==20231228
+pytesseract==0.3.13
+Pillow==10.4.0
+vaderSentiment==3.3.2
+gunicorn==22.0.0
+python-dotenv==1.0.1
+pdf2image
+pdfplumber
+google-generativeai
